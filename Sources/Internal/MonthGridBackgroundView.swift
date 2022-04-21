@@ -38,7 +38,6 @@ final class MonthGridBackgroundView: UIView {
     context?.setLineWidth(invariantViewProperties.lineWidth)
     context?.setStrokeColor(invariantViewProperties.color.cgColor)
 
-    // Draw rounded rectangles for each day row
     for dayFrame in framesOfDays {
       let gridRect = CGRect(
         x: dayFrame.minX - (invariantViewProperties.horizontalDayMargin / 2),
