@@ -80,6 +80,9 @@ public final class CalendarView: UIView {
   /// A closure (that is retained) that is invoked whenever a day is selected.
   public var daySelectionHandler: ((Day) -> Void)?
 
+  /// A closure (that is retained) that is invoked whenever the height of the calendar content changes in the scrollView
+  public var heightChangeHandler: ((CGFloat) -> Void)?
+
   /// A closure (that is retained) that is invoked inside `scrollViewDidScroll(_:)`
   public var didScroll: ((_ visibleDayRange: DayRange, _ isUserDragging: Bool) -> Void)?
 
@@ -230,6 +233,17 @@ public final class CalendarView: UIView {
         notification: .screenChanged,
         argument: visibleViewsForVisibleItems[element.correspondingItem])
     }
+
+    // When we're interested in the height of the calendar we assume we don't want any scrolling functionality
+    scrollView.isScrollEnabled = heightChangeHandler == nil
+
+    guard let visibleItemsDetails = visibleItemsDetails else {
+      return
+    }
+
+    // Inform the closure of the new height
+    let height = visibleItemsDetails.maxMonthHeight + visibleItemsDetails.heightOfPinnedContent
+    heightChangeHandler?(height)
   }
 
   /// Sets the content of the `CalendarView`, causing it to re-render.
